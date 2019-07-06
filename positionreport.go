@@ -33,7 +33,7 @@ type PositionReport struct {
 	Lon      float64 // (sc I4)
 	Lat      float64 // (sc I4)
 	Course   float32 //course over ground - COG (sc U1)
-	Heading  uint16  // true heading - HDG
+	Heading  float32 // true heading - HDG
 	Second   uint8   // timestamp
 }
 
@@ -147,7 +147,7 @@ func DecodeClassAPositionReport(payload string) (ClassAPositionReport, error) {
 	m.Course = float32(bitsToInt(116, 127, data)) / 10
 
 	//m.Heading = uint16(decodeAisChar(data[21]))<<12>>7 | uint16(decodeAisChar(data[22]))>>1
-	m.Heading = uint16(bitsToInt(128, 136, data))
+	m.Heading = float32(bitsToInt(128, 136, data))
 
 	//m.Second = decodeAisChar(data[22])<<7>>2 | decodeAisChar(data[23])>>1
 	m.Second = uint8(bitsToInt(137, 142, data))
@@ -187,7 +187,7 @@ func DecodeClassBPositionReport(payload string) (ClassBPositionReport, error) {
 
 	m.Course = float32(bitsToInt(112, 123, data)) / 10
 
-	m.Heading = uint16(bitsToInt(124, 132, data))
+	m.Heading = float32(bitsToInt(124, 132, data))
 
 	m.Second = uint8(bitsToInt(133, 138, data))
 
@@ -229,7 +229,7 @@ func DecodeExtendedClassBPositionReport(payload string) (ExtendedClassBPositionR
 
 	m.Course = float32(bitsToInt(112, 123, data)) / 10
 
-	m.Heading = uint16(bitsToInt(124, 132, data))
+	m.Heading = float32(bitsToInt(124, 132, data))
 
 	m.Second = uint8(bitsToInt(133, 138, data))
 
