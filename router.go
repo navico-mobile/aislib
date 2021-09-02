@@ -72,6 +72,11 @@ func Router(in chan string, out chan Message, failed chan FailedSentence) {
 			continue
 		}
 
+		if tokens[1] == "" {
+			failed <- FailedSentence{sentence, "Invalid number of fragments"}
+			continue
+		}
+
 		if tokens[1] == "1" { // One sentence message, process it immediately
 			padding, _ = strconv.Atoi(tokens[6][:1])
 			out <- Message{MessageType(tokens[5]), tokens[5], uint8(padding)}
@@ -104,6 +109,11 @@ func Router(in chan string, out chan Message, failed chan FailedSentence) {
 				payload = ""
 			}
 			payload += tokens[5]
+
+			if ccount == 0 || ccount >= 5 {
+				failed <- FailedSentence{sentence, "Unexpected fragment number"}
+				continue
+			}
 			cache[ccount-1] = sentence
 			count++
 			if ccount == 1 { // First message in sequence, get size and id
